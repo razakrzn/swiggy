@@ -1,0 +1,20 @@
+# Python Bytecode
+*.pyc
+__pycache__/
+
+# Virtual environment
+venv/
+.env/
+
+# Configuration and log files
+*.log
+*.pot
+*.pyc
+.coverage
+.tox
+.nox
+.hypothesis
+.pytest_cache
+
+# Sensitive files
+secrets.json
