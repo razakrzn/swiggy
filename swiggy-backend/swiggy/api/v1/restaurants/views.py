@@ -1,9 +1,10 @@
+import json
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from restaurants.models import Restaurant, FoodItem, Order, Collection
-from .serializers import RestaurantSerializer, FoodItemSerializer, OrderSerializer, CollectionSerializer
+from restaurants.models import Restaurant, FoodItem, Collection
+from .serializers import RestaurantSerializer, FoodItemSerializer, CollectionSerializer
 from .pagination import StandardResultSetPagination
 
 
@@ -24,6 +25,7 @@ class Collections(APIView):
 
 
 class RestaurantList(APIView):
+    # permission_classes = [IsAuthenticated]
 
     def get(self, request):
         restaurants = Restaurant.objects.all()
@@ -49,6 +51,28 @@ class RestaurantList(APIView):
 
         return Response(response_data)
 
+    def post(self, request):
+        print("Processed data:", request.data)
+        serializer = RestaurantSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {
+                    "status_code": 201,
+                    "message": "Restaurant created successfully.",
+                    "data": serializer.data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+        return Response(
+            {
+                "status_code": 400,
+                "message": "Restaurant creation failed.",
+                "errors": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
 
 class RestaurantDetails(APIView):
     permission_classes = [AllowAny]
@@ -63,7 +87,7 @@ class RestaurantDetails(APIView):
 
             food_menu = [
                 item for item in restaurant_data.get('food_menu', [])
-                if not item.get('is_deleted', False)
+                if not item.get('is_available', False)
             ]
             
             restaurant_data['food_menu'] = food_menu
@@ -92,7 +116,7 @@ class FoodItemList(APIView):
 
     def get(self, request, pk: int) -> Response:
         try:
-            food_item = FoodItem.objects.get(pk=pk, is_deleted=False)
+            food_item = FoodItem.objects.get(pk=pk, is_available=False)
             serializer = FoodItemSerializer(food_item, context={'request': request})
             return Response(
                 {
@@ -117,7 +141,7 @@ class FoodItems(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        food_items = FoodItem.objects.filter(is_deleted=False)
+        food_items = FoodItem.objects.filter(is_available=False)
 
         serializer = FoodItemSerializer(
             food_items, many=True, context={'request': request}
@@ -130,31 +154,15 @@ class FoodItems(APIView):
 
         return Response(response_data)
 
-    
 
-
-class OrderDetail(APIView):
-    
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        try:
-            order = Order.objects.get(pk=pk)
-            serializer = OrderSerializer(order, context={'request': request})
-
-            return Response(
-                {
-                    'status_code': 6000,
-                    'data': serializer.data,
-                },
-                status=status.HTTP_200_OK,
-            )
-
-        except Order.DoesNotExist:
-            return Response(
-                {
-                    'status_code': 6001,
-                    'message': 'Order not found',
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
+class FoodItemCreateView(APIView):
+    def post(self, request):
+        print("Processed data:", request.data)
+        data = request.data.copy()
+        data["restaurant"] = data.get("restaurant")  # Ensure it's an ID, not an object
+        serializer = FoodItemSerializer(data=data)
+        # serializer = FoodItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from restaurants.models import Restaurant, FoodItem, Category, Order, Collection
+from restaurants.models import Restaurant, FoodItem, Category, Collection
 
 
 admin.site.register(Collection)
@@ -16,8 +16,3 @@ class RestaurantAdmin(admin.ModelAdmin):
 admin.site.register(Restaurant, RestaurantAdmin)
 
 admin.site.register(Category)
-
-class OrderAdmin(admin.ModelAdmin):
-    model = Order
-
-admin.site.register(Order, OrderAdmin)

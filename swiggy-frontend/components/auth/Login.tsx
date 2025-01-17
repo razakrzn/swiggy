@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
+import { useCustomerAuth } from "@/contexts/CustomerAuthContext";
 
 interface LoginProps {
   onSignupClick: () => void;
@@ -7,13 +8,59 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ onSignupClick, onClose }) => {
+  const { login } = useCustomerAuth();
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [localError, setLocalError] = useState<string | null>(null);
   const phoneInputRef = useRef<HTMLInputElement>(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (phoneInputRef.current) {
-      phoneInputRef.current.focus();
-    }
+    phoneInputRef.current?.focus();
   }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLocalError(null);
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/v1/auth/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setLocalError(data.error || "Login failed");
+        return;
+      }
+
+      if (data.role === "customer") {
+        await login(data.access, data.refresh);
+        setShowPopup(true);
+        setFormData({ username: "", password: "" });
+      } else {
+        setLocalError("invalid credentials");
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+      setLocalError("Something went wrong. Please try again later.");
+    }
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
+    window.location.reload();
+  };
 
   return (
     <>
@@ -47,24 +94,26 @@ const Login: React.FC<LoginProps> = ({ onSignupClick, onClose }) => {
                 className="absolute w-[100px] right-0 top-[58px]"
               />
             </div>
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <div>
                 <div className="border border-[#d4d5d9] p-0 block relative transform-gpu">
                   <input
-                    type="email"
+                    type="text"
                     required
-                    name="email"
-                    id="email"
+                    name="username"
+                    id="username"
                     tabIndex={1}
                     autoComplete="off"
                     ref={phoneInputRef}
+                    value={formData.username}
+                    onChange={handleChange}
                     className="bg-transparent border-0 outline-0 h-[60px] w-full text-[17px] px-5 pt-[22px] box-border font-medium peer"
                   />
                   <label
                     htmlFor="email"
                     className="text-[14px] font-medium text-[#93959f] absolute left-0 bottom-[24px] pl-[20px] w-full transform transition-all duration-300 peer-valid:-translate-y-[100%] peer-valid:text-[#7e808c] peer-valid:text-[11.5px] peer-focus:-translate-y-[100%] peer-focus:text-[#7e808c] peer-focus:text-[11.5px] cursor-text pointer-events-none"
                   >
-                    Email
+                    Username
                   </label>
                 </div>
               </div>
@@ -78,6 +127,8 @@ const Login: React.FC<LoginProps> = ({ onSignupClick, onClose }) => {
                     tabIndex={2}
                     autoComplete="off"
                     className="bg-transparent border-0 outline-0 h-[60px] w-full text-[17px] px-5 pt-[22px] box-border font-medium peer"
+                    value={formData.password}
+                    onChange={handleChange}
                   />
                   <label
                     htmlFor="password"
@@ -87,26 +138,45 @@ const Login: React.FC<LoginProps> = ({ onSignupClick, onClose }) => {
                   </label>
                 </div>
               </div>
+              <p className="text-xs text-logoColor text-center mt-2">
+                {localError}
+              </p>
               <div className="mt-5">
-                <Link
-                  href=""
+                <button
+                  type="submit"
                   className="w-full cursor-pointer inline-flex justify-center items-center text-center text-[13px] text-white font-semibold h-[50px] px-8 bg-[#ff5200] hover:shadow-md uppercase"
                 >
-                  <input type="submit" className="hidden" />
                   Login
-                </Link>
+                </button>
               </div>
               <div className="text-[11px] text-[#686b78] mt-5 font-medium">
                 By clicking on Login, I accept the{" "}
-                <Link href="/" className="text-[#282c3f]">
+                <Link href="" className="text-[#282c3f]">
                   Terms & Conditions
                 </Link>
                 &
-                <Link href="/" className="text-[#282c3f]">
+                <Link href="" className="text-[#282c3f]">
                   Privacy Policy
                 </Link>
               </div>
             </form>
+            {showPopup && (
+              <div className="popup">
+                <div className="popup-content">
+                  <span className="w-16 h-16 inline-block">
+                    <img src="/images/popup.svg" alt="tik" />
+                  </span>
+                  <h2 className="font-medium my-4">LogIn Successful!</h2>
+                  <button
+                    onClick={closePopup}
+                    tabIndex={0}
+                    className="popup-button"
+                  >
+                    Done
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

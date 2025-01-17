@@ -1,66 +1,52 @@
-import requests
-import json
-
-from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import authenticate
+from rest_framework.permissions import IsAuthenticated
+from .serializers import UserSerializer
+from django.contrib.auth.models import update_last_login
+from rest_framework_simplejwt.tokens import RefreshToken
+from accounts.models import User
 
-class Create(APIView):
-    permission_classes = [AllowAny]
-
+class RegisterView(APIView):
     def post(self, request):
-        email = request.data['email']
-        name = request.data['name']
-        password = request.data['password']
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "message": "User registered successfully",
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        print("email", email)
-        print("password", password)
-        print("name", name)
 
-        if not User.objects.filter(username=email).exists():
-            user = User.objects.create_user(
-                username=email,
-                first_name=name,
-                password=password
-            )
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
 
-            headers = {
-                "Content-Type": "application/json",
-            }
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+            update_last_login(None, user)
+            return Response({
+                'message': 'Login successful',
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'username': str(username),
+                'email': user.email,
+                'role': user.role
+            })
 
-            data = {
-                'username': email,
-                'password': password
-            }
+        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-            protocol = 'http://'
-            if request.is_secure():
-                protocol = 'https://'
 
-            host = request.get_host()
+class UserDetailsView(APIView):
+    permission_classes = [IsAuthenticated]
 
-            # Fix the missing `/` in the URL
-            url = protocol + host + '/api/v1/auth/token/'
-
-            # Use requests.post
-            response = requests.post(url, headers=headers, data=json.dumps(data))
-
-            if response.status_code == 200:
-                response_data = {
-                    'status_code': 6000,
-                    'message': "Account created successfully.",
-                    'data': response.json()
-                }
-            else:
-                response_data = {
-                    'status_code': 6002,
-                    'message': "Failed to create account. Please try again."
-                }
-        else:
-            response_data = {
-                'status_code': 6001,
-                'message': "This account already exists."
-            }
-
-        return Response(response_data)
+    def get(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

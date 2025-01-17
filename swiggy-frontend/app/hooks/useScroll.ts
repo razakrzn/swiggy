@@ -33,11 +33,15 @@ export const useScroll = (scrollStep: number = 300) => {
   };
 
   useEffect(() => {
+    // Check initial scroll position
     checkScrollPosition();
+
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener("scroll", checkScrollPosition);
     }
+
+    // Ensure we clean up the event listener on unmount
     return () => {
       if (container) {
         container.removeEventListener("scroll", checkScrollPosition);
