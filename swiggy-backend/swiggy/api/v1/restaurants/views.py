@@ -36,7 +36,6 @@ class RestaurantList(APIView):
         return Response(response_data)
 
     def post(self, request):
-        print("Processed data:", request.data)
         serializer = RestaurantSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
@@ -141,7 +140,6 @@ class FoodItems(APIView):
 
 class FoodItemCreateView(APIView):
     def post(self, request):
-        print("Processed data:", request.data)
         data = request.data.copy()
         data["restaurant"] = data.get("restaurant")  # Ensure it's an ID, not an object
         serializer = FoodItemSerializer(data=data)
