@@ -47,7 +47,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = serializers.SerializerMethodField()
+    order_items = OrderItemSerializer(many=True)
     restaurant = serializers.PrimaryKeyRelatedField(
         queryset=Restaurant.objects.all()  # Accept restaurant ID
     )
@@ -57,7 +57,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'restaurant', 'total_price',
-                  'status', 'created_at', 'order_items', 'user', 'customer_location', 'customer_phone']
+                  'status', 'created_at', 'order_items', 'user', 'customer_location', 'customer_phone', 'is_deleted']
         
     def get_order_items(self, obj):
         # Use MenuItemSerializer to serialize `menu_item` data
@@ -73,8 +73,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
+        # Print validated data to inspect it
         print("Validated data:", validated_data)
-       
+        # Extract order items data
         order_items_data = validated_data.pop('order_items')
 
         # Get the user from the request context

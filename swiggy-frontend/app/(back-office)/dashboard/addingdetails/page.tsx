@@ -4,8 +4,14 @@ import { useOwnerAuth } from "@/contexts/OwnerAuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Select from "react-select";
 
 interface Category {
+  id: number;
+  name: string;
+}
+
+interface Location {
   id: number;
   name: string;
 }
@@ -16,6 +22,7 @@ interface RestaurantFormProps {
   featured_image: File | null;
   rating?: number;
   outlet?: string;
+  location: number[];
   email: string;
   address: string;
   phone_number: string;
@@ -31,6 +38,7 @@ export default function AddingDetails() {
   const { user } = useOwnerAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
@@ -41,6 +49,7 @@ export default function AddingDetails() {
     featured_image: null,
     rating: 4.2,
     outlet: "",
+    location: [],
     email: "",
     address: "",
     phone_number: "",
@@ -80,7 +89,7 @@ export default function AddingDetails() {
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        const data: Category[] = await response.json(); // Ensure data matches `Category[]`
+        const data: Category[] = await response.json();
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -89,6 +98,32 @@ export default function AddingDetails() {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const response = await fetch("http://localhost:8000/api/v1/locations/");
+      const data = await response.json();
+      console.log(data);
+      setLocations(data);
+    };
+
+    fetchLocations();
+  }, []);
+
+  const locationOptions = locations.map((location) => ({
+    value: location.id,
+    label: location.name,
+  }));
+
+  const handleLocationSelect = (selectedOptions: any) => {
+    const selectedLocationIds = selectedOptions.map(
+      (option: any) => option.value
+    );
+    setFormData((prevData) => ({
+      ...prevData,
+      location: selectedLocationIds,
+    }));
+  };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCategories = Array.from(
@@ -278,7 +313,26 @@ export default function AddingDetails() {
                           />
                         </div>
                       </div>
-
+                      <div className="flex flex-col gap-2 mt-2">
+                        <label
+                          htmlFor="location"
+                          className="font-semibold text-[17px] opacity-75"
+                        >
+                          Select Location:
+                        </label>
+                        <Select
+                          id="location"
+                          isMulti
+                          options={locationOptions}
+                          value={locationOptions.filter((option) =>
+                            formData.location.includes(option.value)
+                          )}
+                          onChange={handleLocationSelect}
+                          placeholder="Search and select locations"
+                          className="w-full"
+                          classNamePrefix="select-container"
+                        />
+                      </div>
                       <div className="flex flex-col gap-2 mt-2">
                         <label
                           htmlFor="categories"

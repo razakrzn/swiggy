@@ -20,6 +20,7 @@ type Order = {
     menu_item: {
       id: number;
       name: string;
+      image: string;
       price: string;
     };
     quantity: number;
@@ -123,7 +124,10 @@ export default function Orders() {
                   <div className="flex gap-4 items-center">
                     <div className="w-24 h-24 rounded-2xl overflow-hidden">
                       <img
-                        src="/images/feachured2.jpg"
+                        src={
+                          order.order_items[0]?.menu_item.image ||
+                          "fallback-image-url.jpg"
+                        }
                         alt="food item"
                         className="block w-full rounded-2xl "
                       />
@@ -217,7 +221,7 @@ export default function Orders() {
                                   Select the current status of the order
                                 </small>
                               </div>
-                              <div className="w-5">
+                              <div className="">
                                 <select
                                   value={statusFilter}
                                   onChange={(e) =>
@@ -250,10 +254,11 @@ export default function Orders() {
               </div>
             ))
           ) : (
-            <div className="border rounded-lg shadow-md p-6 bg-white text-center">
-              <p className="text-gray-700 mb-1">
-                No orders matching your criteria.
-              </p>
+            <div className="flex flex-col items-center w-full">
+              <div className="w-56 mx-auto">
+                <img src="/images/checkout.png" alt="take away image" />
+              </div>
+              <p className="text-[#7e808c] mt-4">No orders</p>
             </div>
           )}
         </div>

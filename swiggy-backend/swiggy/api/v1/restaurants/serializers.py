@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from restaurants.models import Restaurant, FoodItem, Collection, Category
+from restaurants.models import Restaurant, FoodItem, Category, Locations
 from accounts.models import User
 
 
@@ -8,12 +8,6 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role']
-
-class CollectionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Collection
-        fields = '__all__'
 
 
 class FoodItemSerializer(serializers.ModelSerializer):
@@ -68,8 +62,8 @@ class FoodItemSerializer(serializers.ModelSerializer):
 
 
 class RestaurantSerializer(serializers.ModelSerializer):
-    # owner_name = UserSerializer()
     categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
+    location = serializers.PrimaryKeyRelatedField(queryset=Locations.objects.all())
     food_menu = FoodItemSerializer(many=True, source='food_items', read_only=True)
     featured_image = serializers.ImageField(required=False)
 
@@ -93,18 +87,24 @@ class RestaurantSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['categories'] = [
             category.name for category in instance.categories.all()
-        ]  # Add category names for easier frontend use
+        ]
+        representation['location'] = instance.location.name
         return representation
 
     def create(self, validated_data):
         # Extract categories from validated data
         categories = validated_data.pop('categories', [])
+        location = validated_data.pop('location', None)
 
         # Create the restaurant instance
         restaurant = Restaurant.objects.create(**validated_data)
 
+        if location:
+            restaurant.location = location
+            restaurant.save()
+
         # Associate categories
-        restaurant.categories.set(categories)  # Categories are already validated as objects
+        restaurant.categories.set(categories)
 
         return restaurant
 

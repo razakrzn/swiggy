@@ -209,7 +209,7 @@ export default function checkout() {
                 </div>
                 <Link
                   href="/restaurants"
-                  className="mt-7 px-5 py-3 uppercase bg-[#ff5200] cursor-pointer text-center hover:shadow-[0_4px_14px_#d4d5d9] after:"
+                  className="mt-7 px-5 py-3 uppercase bg-[#ff5200] cursor-pointer text-center hover:shadow-[0_4px_14px_#d4d5d9]"
                 >
                   <span className="text-white font-semibold inline-block text-sm w-ful h-full">
                     See restaurants near you

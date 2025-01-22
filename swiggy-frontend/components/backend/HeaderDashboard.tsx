@@ -2,9 +2,57 @@
 
 import { useOwnerAuth } from "@/contexts/OwnerAuthContext";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface RestaurantInfo {
+  name: string;
+}
 
 const HeaderDashboard = () => {
   const { user, setUser, logout } = useOwnerAuth();
+  const [restaurant, setRestaurant] = useState<RestaurantInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user || !user.restaurantIds) {
+      return;
+    }
+
+    const restaurantId = user.restaurantIds;
+
+    const fetchRestaurantData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `http://127.0.0.1:8000/api/v1/restaurants/${restaurantId}/`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch restaurant details");
+        }
+        const data = await response.json();
+
+        if (data && typeof data.data === "number") {
+          const detailedResponse = await fetch(
+            `http://127.0.0.1:8000/api/v1/restaurants/details/${data.data}/`
+          );
+          if (!detailedResponse.ok) {
+            throw new Error("Failed to fetch detailed restaurant information");
+          }
+          const detailedData = await detailedResponse.json();
+          setRestaurant(detailedData.data);
+        } else {
+          setRestaurant(data.data);
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRestaurantData();
+  }, [user]);
 
   return (
     <>
@@ -24,7 +72,7 @@ const HeaderDashboard = () => {
               swiggy
             </span>
             <span className="text-[14px] text-[#02060C] inline-block ml-1">
-              for restaurant
+              for {restaurant?.name}
             </span>
           </div>
           <div className="flex items-center">

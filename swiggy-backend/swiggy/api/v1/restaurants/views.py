@@ -3,25 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from restaurants.models import Restaurant, FoodItem, Collection
-from .serializers import RestaurantSerializer, FoodItemSerializer, CollectionSerializer
+from restaurants.models import Restaurant, FoodItem
+from .serializers import RestaurantSerializer, FoodItemSerializer
 from .pagination import StandardResultSetPagination
-
-
-class Collections(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        
-        collections = Collection.objects.filter(is_deleted=False)
-        serializer = CollectionSerializer(collections, many=True, context={'request': request})
-
-        response_data = {
-            "status_code": 6000,
-            'data': serializer.data,
-        }
-        
-        return Response(response_data)
 
 
 class RestaurantList(APIView):

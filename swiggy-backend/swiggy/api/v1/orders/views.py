@@ -16,7 +16,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         # Users can only see their own orders
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user, is_deleted=False)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request': request})
@@ -24,6 +24,14 @@ class OrderListCreateView(generics.ListCreateAPIView):
             serializer.save()  # Save the order and associate it with the user
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        instance.is_deleted = True
+        instance.save()
+
+        return Response({'detail': 'Order marked as deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class OrderView(generics.ListCreateAPIView):

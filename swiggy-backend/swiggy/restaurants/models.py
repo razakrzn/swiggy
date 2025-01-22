@@ -2,13 +2,12 @@ from django.db import models
 from django.forms import ValidationError
 from accounts.models import User
 
-class Collection(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    collection_image = models.ImageField(upload_to="collections/images/")
-    is_deleted = models.BooleanField(default=False)
+class Locations(models.Model):
+    name = models.CharField(max_length=100,)
 
     class Meta:
-        db_table = 'food_collection'
+        db_table = 'restaurants_locations'
+        verbose_name_plural = 'locations'
 
     def __str__(self):
         return self.name
@@ -30,6 +29,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length=255)
     featured_image = models.ImageField(upload_to="restaurants/images/")
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    location = models.ForeignKey(Locations, on_delete=models.CASCADE)
     outlet = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=255)
     address = models.TextField()

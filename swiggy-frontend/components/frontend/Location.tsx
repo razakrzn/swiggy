@@ -1,11 +1,18 @@
 import { useState, useEffect, useRef } from "react";
+import { Location } from "../../app/utils/models";
 
-const Location = ({
-  isVisible,
-  onClose,
-}: {
+interface LocationSelectorProps {
+  locations: Location[];
+  onLocationSelect: (location: string) => void;
   isVisible: boolean;
   onClose: () => void;
+}
+
+const LocationSelector: React.FC<LocationSelectorProps> = ({
+  locations,
+  onLocationSelect,
+  isVisible,
+  onClose,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -30,6 +37,12 @@ const Location = ({
       onClose();
     }
   };
+
+  const filteredLocations = locations
+    ? locations.filter((location) =>
+        location.name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   return (
     <>
@@ -79,8 +92,42 @@ const Location = ({
                     Cancel
                   </div>
                 )}
+                <div className="">
+                  {searchQuery &&
+                    (filteredLocations.length > 0 ? (
+                      <ul className="">
+                        {filteredLocations.map((location) => (
+                          <li
+                            key={location.id}
+                            className="border p-5 boreder[#d4d5d9] block relative translate-z-0 text-sm font-medium"
+                          >
+                            <button
+                              onClick={() => onLocationSelect(location.name)}
+                            >
+                              {location.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No locations found</p>
+                    ))}
+                </div>
               </div>
             </div>
+            {/* {filteredLocations.length === 0 ? (
+              <p>No locations found</p>
+            ) : (
+              <ul>
+                {filteredLocations.map((location) => (
+                  <li key={location.id}>
+                    <button onClick={() => onLocationSelect(location.name)}>
+                      {location.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )} */}
             <div className="pl-[120px] pr-[40px] w-[522px]">
               <div>
                 <div className="border border-[#d4d5d9] mb-5">
@@ -99,32 +146,6 @@ const Location = ({
                         <div className="text-[15px] font-medium text-[#282c3f]">
                           Get current location
                         </div>
-                        <div className="text-[12px] text-[#93959f] pt-[5px]">
-                          Using GPS
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className=""></div>
-                <div className="mb-5 border border-[#d4d5d9]">
-                  <div className="text-[11px] text-[#7e808c] ml-[56px] mt-[25px]">
-                    RECENT SEARCHES
-                  </div>
-                  <div className="recent-location relative cursor-pointer overflow-hidden ">
-                    <div className="table table-fixed py-[22px] px-[24px]">
-                      <div className="table-cell text-left text-[18px] w-[32px] pt-0 pl-[1px] text-[#535665]">
-                        <span className="w-[18px] h-[18px] inline-block">
-                          <img src="/images/recent.svg" alt="recent icon" />
-                        </span>
-                      </div>
-                      <div className="table-cell align-middle">
-                        <div className="text-[15px] font-medium text-[#282c3f]">
-                          Calicut
-                        </div>
-                        <div className="text-[12px] text-[#93959f] pt-[5px]">
-                          Kerala, India
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -138,4 +159,4 @@ const Location = ({
   );
 };
 
-export default Location;
+export default LocationSelector;

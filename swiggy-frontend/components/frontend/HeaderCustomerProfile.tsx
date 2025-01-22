@@ -1,7 +1,6 @@
 "use client";
 
 import AuthModal from "@/components/auth/AuthModal";
-import Location from "@/components/frontend/Location";
 import Link from "next/link";
 import {
   faBowlFood,
@@ -14,17 +13,12 @@ import { useState } from "react";
 import { useCustomerAuth } from "@/contexts/CustomerAuthContext";
 
 const HeaderCustomerProfile = () => {
-  const [isLocationModalVisible, setLocationModalVisible] = useState(false);
   const [isAuthModalVisible, setAuthModalVisible] = useState(false);
-  const { user, setUser, logout } = useCustomerAuth();
+  const { user } = useCustomerAuth();
 
   const pathname = usePathname();
   const isActive = pathname === "/profile";
 
-  const handleSignOut = () => {
-    setUser(null);
-    logout();
-  };
   return (
     <>
       <header className="h-[80px] shadow-custom pl-[20px] pr-[20px]">
@@ -32,7 +26,7 @@ const HeaderCustomerProfile = () => {
           <div className="left flex justify-between items-center">
             <div className="flex items-center gap-10">
               <Link
-                href="/"
+                href="/restaurants"
                 className=" w-[48px] overflow-hidden inline-block rounded-[15px]"
               >
                 <img
@@ -43,7 +37,6 @@ const HeaderCustomerProfile = () => {
               </Link>
               <div
                 role="button"
-                onClick={() => setLocationModalVisible(true)}
                 className="locationContainer group text-[16px] pr-[10px] relative hover:text-logoColor"
               >
                 <span className="relative after:content-[''] after:absolute after:h-[2px] after:w-full after:left-0 after:bottom-[-5px] after:bg-customGray group-hover:after:bg-logoColor  ">
@@ -58,10 +51,6 @@ const HeaderCustomerProfile = () => {
                   className="text-logoColor absolute right-[-12px] top-1/2 transform -translate-y-1/2"
                 />
               </div>
-              <Location
-                isVisible={isLocationModalVisible}
-                onClose={() => setLocationModalVisible(false)}
-              />
             </div>
           </div>
           <nav className="flex justify-between gap-[50px] items-center h-full">
@@ -147,11 +136,6 @@ const HeaderCustomerProfile = () => {
                   </span>
                 </span>
                 <FontAwesomeIcon icon={faBowlFood} size="lg" />
-                {/* <img
-                  className="block w-full"
-                  src="/images/cart.svg"
-                  alt="corporate icon"
-                /> */}
               </span>
               <span className="text-[14px] font-semibold">Cart</span>
             </Link>

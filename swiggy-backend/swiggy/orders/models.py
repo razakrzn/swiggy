@@ -22,6 +22,7 @@ class Order(models.Model):
     customer_phone = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    is_deleted = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.order_id:

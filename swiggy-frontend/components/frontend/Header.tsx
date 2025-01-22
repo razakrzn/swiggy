@@ -5,14 +5,16 @@ import { faBowlFood, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 import Link from "next/link";
 import { useState } from "react";
-import Location from "./Location";
 import { useCustomerAuth } from "@/contexts/CustomerAuthContext";
 import AuthModal from "../auth/AuthModal";
 import { useCart } from "@/contexts/CartContext";
 import { usePathname } from "next/navigation";
 
-const Header = () => {
-  const [isLocationModalVisible, setLocationModalVisible] = useState(false);
+interface HeaderProps {
+  onShowLocationSelector: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
   const [isAuthModalVisible, setAuthModalVisible] = useState(false);
   const { user } = useCustomerAuth();
   const { totalItems } = useCart();
@@ -26,7 +28,7 @@ const Header = () => {
           <div className="left flex justify-between items-center">
             <div className="flex items-center gap-10">
               <Link
-                href="/"
+                href="/restaurants"
                 className=" w-[48px] overflow-hidden inline-block rounded-[15px]"
               >
                 <img
@@ -37,7 +39,7 @@ const Header = () => {
               </Link>
               <div
                 role="button"
-                onClick={() => setLocationModalVisible(true)}
+                onClick={onShowLocationSelector}
                 className="locationContainer group text-[16px] pr-[10px] relative hover:text-logoColor"
               >
                 <span className="relative after:content-[''] after:absolute after:h-[2px] after:w-full after:left-0 after:bottom-[-5px] after:bg-customGray group-hover:after:bg-logoColor  ">
@@ -52,10 +54,6 @@ const Header = () => {
                   className="text-logoColor absolute right-[-12px] top-1/2 transform -translate-y-1/2"
                 />
               </div>
-              <Location
-                isVisible={isLocationModalVisible}
-                onClose={() => setLocationModalVisible(false)}
-              />
             </div>
           </div>
           <nav className="flex justify-between gap-[50px] items-center h-full">

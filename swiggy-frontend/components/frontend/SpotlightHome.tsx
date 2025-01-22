@@ -22,13 +22,13 @@ const Spotlight = () => {
   };
 
   const handleSignOut = () => {
-    setUser(null); // Correctly use setUser to nullify the user
-    logout(); // Optionally call logout if it does more than just setUser(null)
+    setUser(null);
+    logout();
   };
 
   return (
     <div>
-      <div className="background bg-logoColor h-[100vh]">
+      <div className="background bg-logoColor min-h-screen">
         <header>
           <div className="wrapper py-8 flex items-center justify-between !w-[80%]">
             <Link
@@ -148,6 +148,7 @@ const Spotlight = () => {
                 <div className="w-[520px] mx-auto">
                   <Link
                     href="/restaurants"
+                    target="black"
                     className="inline-block w-full h-full rounded-[36px]"
                   >
                     <img

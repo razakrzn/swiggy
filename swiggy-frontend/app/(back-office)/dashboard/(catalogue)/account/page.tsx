@@ -16,6 +16,7 @@ interface RestaurantInfo {
   name: string;
   address: string;
   owner_name: Owner;
+  location: string;
   outlet: string;
   email: string;
   phone_number: string;
@@ -133,6 +134,12 @@ export default function account() {
               </div>
               <div className="w-full border-b py-4">
                 <div className="flex items-center justify-between">
+                  <h5 className="font-medium">Location</h5>
+                  <p className="text-[#6E6F76]">{restaurant.location}</p>
+                </div>
+              </div>
+              <div className="w-full border-b py-4">
+                <div className="flex items-center justify-between">
                   <h5 className="font-medium">Email</h5>
                   <p className="text-[#6E6F76]">{restaurant.email}</p>
                 </div>
@@ -180,21 +187,6 @@ export default function account() {
               <div className="flex items-center pt-10">
                 {user && (
                   <div className="flex gap-8 ml-auto">
-                    <Link
-                      href="/dashboard/account"
-                      className="text-[14px] font-semibold hover:text-logoColor flex items-center"
-                    >
-                      <span className="inline-block w-[19px] mr-[10px]">
-                        <img
-                          className="block w-full"
-                          src="/images/signIn.svg"
-                          alt="user icon"
-                        />
-                      </span>
-                      <span className="text-[14px] font-semibold capitalize">
-                        {user.username}
-                      </span>
-                    </Link>
                     <button
                       onClick={handleSignOut}
                       className="py-4 px-8 flex items-center justify-center text-white font-extrabold text-sm bg-black rounded-[15px]"

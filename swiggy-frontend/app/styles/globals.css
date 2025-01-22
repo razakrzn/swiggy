@@ -181,3 +181,59 @@ body {
 .popup-button:hover {
   background-color: #ff5200;
 }
+
+.select-container {
+  font-size: 14px;
+}
+
+.select-container__control {
+  border: 1.5px solid #cccccc !important;
+  border-radius: 16px !important;
+  padding: 5px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.select-container__control--is-focused {
+  border-color: #ff5200 !important;
+}
+
+.select-container__placeholder {
+  color: #888888;
+}
+
+.select-container__single-value {
+  color: #000000;
+}
+
+.select-container__option {
+  padding: 10px;
+  color: #000000;
+}
+
+.select-container__option--is-focused {
+  background-color: #e6f3ff;
+}
+
+.select-container__option--is-selected {
+  background-color: #ff5200;
+  color: #ffffff;
+}
+
+.select-container__multi-value {
+  background-color: #e6f3ff;
+  border-radius: 12px;
+  padding: 2px 6px;
+}
+
+.select-container__multi-value__label {
+  color: #ff5200 !important;
+}
+
+.select-container__multi-value__remove {
+  color: #ff5200 !important;
+  cursor: pointer;
+}
+
+.select-container__multi-value__remove:hover {
+  color: #ffffff;
+}
