@@ -35,7 +35,6 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>(
     []
   );
-  const [locationFiltered, setLocationFiltered] = useState<Restaurant[]>([]);
   const currentTime = new Date();
 
   const {
@@ -45,10 +44,6 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
     scrollRight,
     scrollLeft,
   } = useScroll();
-
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  };
 
   const isWorkingDay = (working_days: string[]): boolean => {
     if (!Array.isArray(working_days)) {
@@ -108,7 +103,6 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
         );
 
         setRestaurants(restaurantData);
-        setFilteredRestaurants(restaurantData);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       }
@@ -129,17 +123,18 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
       const filtered = restaurants.filter(
         (restaurant) => restaurant.location === locationToUse
       );
-      setLocationFiltered(filtered); // Assuming you're updating the filtered list here
+
+      setFilteredRestaurants(filtered); // Assuming you're updating the filtered list here
     } else {
       // If no location is selected, show all restaurants
-      setFilteredRestaurants(restaurants);
+      setRestaurants(restaurants);
     }
   }, [selectedLocation, restaurants]);
 
   return (
     <>
       <div className="wrapper !w-[75%]">
-        {locationFiltered.length > 0 ? (
+        {filteredRestaurants.length > 0 ? (
           <div>
             <div className="relative">
               <div className="absolute right-[0px] mt-[12px]">
@@ -171,9 +166,11 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
             </div>
             <div className="p-[16px]">
               <div>
-                <h2 className="font-bold text-[22px]">
-                  Top restaurant chains in {selectedLocation}
-                </h2>
+                {filteredRestaurants.length > 0 && (
+                  <h2 className="font-bold text-[22px]">
+                    Top restaurant chains in {filteredRestaurants[0].location}
+                  </h2>
+                )}
               </div>
             </div>
             <div
@@ -181,7 +178,7 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
               ref={scrollContainerRef}
             >
               <div className="flex">
-                {locationFiltered.map((restaurant) => (
+                {filteredRestaurants.map((restaurant) => (
                   <div
                     key={restaurant.id}
                     className="first:pl-[16px] pr-[32px] last:pr-[16px]"
@@ -248,7 +245,7 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
                           className="font-[400] text-[14px] text-[rgba(2,6,12,0.6)]"
                           title={restaurant.categories.join(", ")}
                         >
-                          {truncateText(restaurant.categories.join(", "), 35)}
+                          {restaurant.categories.join(", ").slice(0, 35)}
                         </div>
                         <div className="font-[400] text-[14px] text-[rgba(2,6,12,0.6)]">
                           {restaurant.outlet}

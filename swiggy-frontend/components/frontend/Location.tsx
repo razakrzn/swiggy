@@ -110,24 +110,13 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({
                         ))}
                       </ul>
                     ) : (
-                      <p>No locations found</p>
+                      <div className="text-center py-4">
+                        <p>No locations found</p>
+                      </div>
                     ))}
                 </div>
               </div>
             </div>
-            {/* {filteredLocations.length === 0 ? (
-              <p>No locations found</p>
-            ) : (
-              <ul>
-                {filteredLocations.map((location) => (
-                  <li key={location.id}>
-                    <button onClick={() => onLocationSelect(location.name)}>
-                      {location.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )} */}
             <div className="pl-[120px] pr-[40px] w-[522px]">
               <div>
                 <div className="border border-[#d4d5d9] mb-5">

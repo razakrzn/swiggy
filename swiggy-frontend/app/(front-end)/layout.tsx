@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { CartProvider } from "@/contexts/CartContext";
 import { Metadata } from "next";
-import "../styles/globals.css";
+import "../../app/styles/globals.css";
 
 export const metadata: Metadata = {
   title: "Order Food Online from India's Best Food Delivery Service | Swiggy",

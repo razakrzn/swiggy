@@ -38,7 +38,14 @@ export default function CustomerAccount() {
                     Sign out
                   </button>
                 ) : (
-                  <Link href="/">login</Link>
+                  <Link
+                    href="/"
+                    className="mt-7 px-5 py-3 uppercase bg-[#ff5200] cursor-pointer text-center hover:shadow-[0_4px_14px_#d4d5d9] w-[135px]"
+                  >
+                    <span className="text-white font-semibold text-sm">
+                      login
+                    </span>
+                  </Link>
                 )}
               </div>
             </div>

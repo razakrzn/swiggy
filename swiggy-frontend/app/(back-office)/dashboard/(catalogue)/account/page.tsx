@@ -1,8 +1,7 @@
 "use client";
 import { useOwnerAuth } from "@/contexts/OwnerAuthContext";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Owner {
   id: number;
@@ -36,18 +35,14 @@ export default function account() {
 
   const router = useRouter();
 
-  const truncateText = (text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  };
-
   const handleSignOut = () => {
     setUser(null);
     logout();
+    router.push("/partner-login");
   };
 
   useEffect(() => {
     if (!user || !user.restaurantIds) {
-      router.push("/partner-login");
       return;
     }
 
@@ -152,15 +147,9 @@ export default function account() {
               </div>
               <div className="w-full border-b py-4">
                 <div className="flex items-center justify-between">
-                  <h5 className="font-medium">Working Days</h5>
-                  <p className="text-[#6E6F76]">{restaurant.working_days}</p>
-                </div>
-              </div>
-              <div className="w-full border-b py-4">
-                <div className="flex items-center justify-between">
                   <h5 className="font-medium">Categories of Foods</h5>
                   <p className="text-[#6E6F76]">
-                    {truncateText(restaurant.categories.join(", "), 35)}
+                    {restaurant.categories.join(", ").slice(0, 30)}
                   </p>
                 </div>
               </div>

@@ -43,7 +43,7 @@ const AddingFoodMenu = ({
     if (user?.restaurantIds) {
       setFormData((prevData) => ({
         ...prevData,
-        restaurant: user.restaurantIds.toString(), // Convert the number to a string if the backend expects it as a string
+        restaurant: user.restaurantIds.toString(),
       }));
     }
   }, [user]);
@@ -57,7 +57,7 @@ const AddingFoodMenu = ({
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
-        const data: Category[] = await response.json(); // Ensure data matches `Category[]`
+        const data: Category[] = await response.json();
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -68,13 +68,12 @@ const AddingFoodMenu = ({
   }, []);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedCategories = Array.from(
-      e.target.selectedOptions,
-      (option) => parseInt(option.value, 10) // Convert to integer explicitly
+    const selectedCategories = Array.from(e.target.selectedOptions, (option) =>
+      parseInt(option.value, 10)
     );
     setFormData((prevData) => ({
       ...prevData,
-      categories: selectedCategories, // Store as integer array
+      categories: selectedCategories,
     }));
   };
 

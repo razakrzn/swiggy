@@ -32,7 +32,6 @@ const OnlineDelivery: React.FC<RestauratChainProps> = ({
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>(
     []
   );
-  const [locationFiltered, setLocationFiltered] = useState<Restaurant[]>([]);
 
   const currentTime = new Date();
 
@@ -98,7 +97,6 @@ const OnlineDelivery: React.FC<RestauratChainProps> = ({
         );
 
         setRestaurants(restaurantData);
-        setFilteredRestaurants(restaurantData);
       } catch (error) {
         console.error("Error fetching restaurants:", error);
       }
@@ -119,24 +117,26 @@ const OnlineDelivery: React.FC<RestauratChainProps> = ({
       const filtered = restaurants.filter(
         (restaurant) => restaurant.location === locationToUse
       );
-      setLocationFiltered(filtered); // Assuming you're updating the filtered list here
+
+      setFilteredRestaurants(filtered); // Assuming you're updating the filtered list here
     } else {
       // If no location is selected, show all restaurants
-      setFilteredRestaurants(restaurants);
+      setRestaurants(restaurants);
     }
   }, [selectedLocation, restaurants]);
 
   return (
     <>
       <div className="wrapper !w-[75%]">
-        {locationFiltered.length > 0 && (
+        {filteredRestaurants.length > 0 && (
           <div>
-            <div>
+            <div className="p-[16px]">
               <div>
-                <h2 className="font-bold text-[22px]">
-                  Restaurants with online food delivery in {selectedLocation}
-                </h2>
-                <div className="h-[16px]"></div>
+                {filteredRestaurants.length > 0 && (
+                  <h2 className="font-bold text-[22px]">
+                    Top restaurant chains in {filteredRestaurants[0].location}
+                  </h2>
+                )}
               </div>
             </div>
             <div className="h-[44px] w-full">
@@ -190,7 +190,7 @@ const OnlineDelivery: React.FC<RestauratChainProps> = ({
               </div>
             </div>
             <div className="p-0 list-none grid items-start grid-cols-4 gap-8 my-8">
-              {locationFiltered.map((restaurant) => (
+              {filteredRestaurants.map((restaurant) => (
                 <div key={restaurant.id} className="item">
                   <div>
                     <Link href={`/city/${restaurant.id}`}>
