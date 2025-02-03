@@ -22,21 +22,23 @@ class RestaurantList(APIView):
         paginated_restaurants = pagination.paginate_queryset(restaurants, request)
 
         serializer = RestaurantSerializer(
-            paginated_restaurants, many=True, context={'request': request}
+            paginated_restaurants, many=True, context={"request": request}
         )
 
         response_data = {
             "status_code": 6000,
-            'count': pagination.page.paginator.count,
-            'next': pagination.get_next_link(),
-            'previous': pagination.get_previous_link(),
-            'data': serializer.data,
+            "count": pagination.page.paginator.count,
+            "next": pagination.get_next_link(),
+            "previous": pagination.get_previous_link(),
+            "data": serializer.data,
         }
 
         return Response(response_data)
 
     def post(self, request):
-        serializer = RestaurantSerializer(data=request.data, context={'request': request})
+        serializer = RestaurantSerializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -62,23 +64,24 @@ class RestaurantDetails(APIView):
 
     def get(self, request, pk):
         try:
-            
+
             restaurant = Restaurant.objects.get(pk=pk)
-            
-            serializer = RestaurantSerializer(restaurant, context={'request': request})
+
+            serializer = RestaurantSerializer(restaurant, context={"request": request})
             restaurant_data = serializer.data
 
             food_menu = [
-                item for item in restaurant_data.get('food_menu', [])
-                if not item.get('is_available', False)
+                item
+                for item in restaurant_data.get("food_menu", [])
+                if not item.get("is_available", False)
             ]
-            
-            restaurant_data['food_menu'] = food_menu
+
+            restaurant_data["food_menu"] = food_menu
 
             return Response(
                 {
-                    'status_code': 6000,
-                    'data': restaurant_data,
+                    "status_code": 6000,
+                    "data": restaurant_data,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -86,12 +89,11 @@ class RestaurantDetails(APIView):
         except Restaurant.DoesNotExist:
             return Response(
                 {
-                    'status_code': 6001,
-                    'message': 'Restaurant not found',
+                    "status_code": 6001,
+                    "message": "Restaurant not found",
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
-
 
 
 class FoodItemList(APIView):
@@ -100,39 +102,38 @@ class FoodItemList(APIView):
     def get(self, request, pk: int) -> Response:
         try:
             food_item = FoodItem.objects.get(pk=pk, is_available=False)
-            serializer = FoodItemSerializer(food_item, context={'request': request})
+            serializer = FoodItemSerializer(food_item, context={"request": request})
             return Response(
                 {
-                    'status_code': 6000,
-                    'data': serializer.data,
+                    "status_code": 6000,
+                    "data": serializer.data,
                 },
                 status=status.HTTP_200_OK,
             )
         except FoodItem.DoesNotExist:
             return Response(
                 {
-                    'status_code': 6001,
-                    'message': 'Food item not found',
+                    "status_code": 6001,
+                    "message": "Food item not found",
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
 
 
-
 class FoodItems(APIView):
-    
+
     permission_classes = [AllowAny]
 
     def get(self, request):
         food_items = FoodItem.objects.filter(is_available=False)
 
         serializer = FoodItemSerializer(
-            food_items, many=True, context={'request': request}
+            food_items, many=True, context={"request": request}
         )
 
         response_data = {
             "status_code": 6000,
-            'data': serializer.data,
+            "data": serializer.data,
         }
 
         return Response(response_data)

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0005_collection_is_deleted'),
+        ("restaurants", "0005_collection_is_deleted"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='restaurant',
-            name='owner_name',
+            model_name="restaurant",
+            name="owner_name",
             field=models.CharField(default=1, max_length=255),
             preserve_default=False,
         ),

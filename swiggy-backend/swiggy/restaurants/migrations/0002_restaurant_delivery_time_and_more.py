@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0001_initial'),
+        ("restaurants", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='restaurant',
-            name='delivery_time',
+            model_name="restaurant",
+            name="delivery_time",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AlterField(
-            model_name='restaurant',
-            name='working_days',
+            model_name="restaurant",
+            name="working_days",
             field=models.JSONField(blank=True, null=True),
         ),
     ]

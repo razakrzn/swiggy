@@ -3,5 +3,5 @@ from .views import LocationsList
 
 
 urlpatterns = [
-    path('', LocationsList.as_view(), name='Locations-list'),
+    path("", LocationsList.as_view(), name="Locations-list"),
 ]

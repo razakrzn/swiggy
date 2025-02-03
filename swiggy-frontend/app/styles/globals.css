@@ -68,7 +68,9 @@ body {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   column-gap: 5%;
-  padding: 0px 17.5% 2rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 75%;
 }
 
 .item1 {
@@ -190,7 +192,9 @@ body {
   border: 1.5px solid #cccccc !important;
   border-radius: 16px !important;
   padding: 5px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .select-container__control--is-focused {

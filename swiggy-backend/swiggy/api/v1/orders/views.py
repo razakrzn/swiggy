@@ -11,15 +11,16 @@ class OrderListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_context(self):
-        return {'request': self.request}
-
+        return {"request": self.request}
 
     def get_queryset(self):
         # Users can only see their own orders
         return Order.objects.filter(user=self.request.user, is_deleted=False)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={'request': request})
+        serializer = self.get_serializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             serializer.save()  # Save the order and associate it with the user
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -31,22 +32,25 @@ class OrderListCreateView(generics.ListCreateAPIView):
         instance.is_deleted = True
         instance.save()
 
-        return Response({'detail': 'Order marked as deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {"detail": "Order marked as deleted successfully."},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class OrderView(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_serializer_context(self):
-        return {'request': self.request}
-
+        return {"request": self.request}
 
     def get_queryset(self):
         restaurant = Restaurant.objects.filter(owner_name=self.request.user).first()
         if restaurant:
             return Order.objects.filter(restaurant=restaurant)
         return Order.objects.all()
+
 
 # View for restaurant owners to list orders related to their restaurant
 class RestaurantOrderListView(generics.ListAPIView):
@@ -72,11 +76,19 @@ class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         # Ensure only the restaurant owner can update the order
         if request.user != order.restaurant.owner_name:
-            return Response({'error': 'You are not authorized to update this order.'}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"error": "You are not authorized to update this order."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
         # Validate the status field
-        if 'status' in request.data and request.data['status'] not in dict(Order.STATUS_CHOICES).keys():
-            return Response({'error': 'Invalid status choice.'}, status=status.HTTP_400_BAD_REQUEST)
+        if (
+            "status" in request.data
+            and request.data["status"] not in dict(Order.STATUS_CHOICES).keys()
+        ):
+            return Response(
+                {"error": "Invalid status choice."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         serializer = self.get_serializer(order, data=request.data, partial=True)
         if serializer.is_valid():

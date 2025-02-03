@@ -6,15 +6,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0006_restaurant_owner_name'),
+        ("restaurants", "0006_restaurant_owner_name"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='restaurant',
-            options={'ordering': ['id']},
+            name="restaurant",
+            options={"ordering": ["id"]},
         ),
         migrations.DeleteModel(
-            name='Order',
+            name="Order",
         ),
     ]

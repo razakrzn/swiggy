@@ -8,31 +8,41 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0007_alter_restaurant_options_delete_order'),
+        ("restaurants", "0007_alter_restaurant_options_delete_order"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('orders', '0003_alter_order_created_at'),
+        ("orders", "0003_alter_order_created_at"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='order',
-            name='customer_name',
+            model_name="order",
+            name="customer_name",
         ),
         migrations.AddField(
-            model_name='order',
-            name='restaurant',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='orders', to='restaurants.restaurant'),
+            model_name="order",
+            name="restaurant",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="orders",
+                to="restaurants.restaurant",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='order',
-            name='total_price',
+            model_name="order",
+            name="total_price",
             field=models.DecimalField(decimal_places=2, default=0.0, max_digits=7),
         ),
         migrations.AddField(
-            model_name='order',
-            name='user',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='orders', to=settings.AUTH_USER_MODEL),
+            model_name="order",
+            name="user",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="orders",
+                to=settings.AUTH_USER_MODEL,
+            ),
             preserve_default=False,
         ),
     ]

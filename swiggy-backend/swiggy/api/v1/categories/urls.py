@@ -3,5 +3,5 @@ from .views import CategoryList
 
 
 urlpatterns = [
-    path('', CategoryList.as_view(), name='category-list'),
+    path("", CategoryList.as_view(), name="category-list"),
 ]

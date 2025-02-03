@@ -9,13 +9,15 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('restaurants', '0007_alter_restaurant_options_delete_order'),
+        ("restaurants", "0007_alter_restaurant_options_delete_order"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='restaurant',
-            name='owner_name',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="restaurant",
+            name="owner_name",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

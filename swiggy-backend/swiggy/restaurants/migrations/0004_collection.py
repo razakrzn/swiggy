@@ -6,19 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0003_alter_fooditem_images'),
+        ("restaurants", "0003_alter_fooditem_images"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Collection',
+            name="Collection",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
-                ('collection_image', models.ImageField(upload_to='collections/images/')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
+                (
+                    "collection_image",
+                    models.ImageField(upload_to="collections/images/"),
+                ),
             ],
             options={
-                'db_table': 'food_collection',
+                "db_table": "food_collection",
             },
         ),
     ]

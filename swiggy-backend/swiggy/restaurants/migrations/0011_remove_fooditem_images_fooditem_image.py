@@ -6,17 +6,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0010_rename_is_deleted_fooditem_is_available_and_more'),
+        ("restaurants", "0010_rename_is_deleted_fooditem_is_available_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='fooditem',
-            name='images',
+            model_name="fooditem",
+            name="images",
         ),
         migrations.AddField(
-            model_name='fooditem',
-            name='image',
-            field=models.ImageField(blank=True, null=True, upload_to='food_items/images/'),
+            model_name="fooditem",
+            name="image",
+            field=models.ImageField(
+                blank=True, null=True, upload_to="food_items/images/"
+            ),
         ),
     ]

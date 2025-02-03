@@ -7,28 +7,40 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('restaurants', '0011_remove_fooditem_images_fooditem_image'),
+        ("restaurants", "0011_remove_fooditem_images_fooditem_image"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Locations',
+            name="Locations",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'locations',
-                'db_table': 'restaurants_locations',
+                "verbose_name_plural": "locations",
+                "db_table": "restaurants_locations",
             },
         ),
         migrations.DeleteModel(
-            name='Collection',
+            name="Collection",
         ),
         migrations.AddField(
-            model_name='restaurant',
-            name='location',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='restaurants.locations'),
+            model_name="restaurant",
+            name="location",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="restaurants.locations",
+            ),
             preserve_default=False,
         ),
     ]

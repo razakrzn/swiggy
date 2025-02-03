@@ -2,12 +2,15 @@ from django.db import models
 from django.forms import ValidationError
 from accounts.models import User
 
+
 class Locations(models.Model):
-    name = models.CharField(max_length=100,)
+    name = models.CharField(
+        max_length=100,
+    )
 
     class Meta:
-        db_table = 'restaurants_locations'
-        verbose_name_plural = 'locations'
+        db_table = "restaurants_locations"
+        verbose_name_plural = "locations"
 
     def __str__(self):
         return self.name
@@ -17,8 +20,8 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
 
     class Meta:
-        db_table = 'restaurants_food_category'
-        verbose_name_plural = 'Categories'
+        db_table = "restaurants_food_category"
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.name
@@ -42,12 +45,14 @@ class Restaurant(models.Model):
     delivery_time = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
-        db_table = 'restaurants_restaurant'
-        ordering = ['id']
+        db_table = "restaurants_restaurant"
+        ordering = ["id"]
 
     def save(self, *args, **kwargs):
-        if self.owner_name.role != 'restaurant_owner':
-            raise ValidationError(f"The user {self.owner_name} is not a restaurant owner.")
+        if self.owner_name.role != "restaurant_owner":
+            raise ValidationError(
+                f"The user {self.owner_name} is not a restaurant owner."
+            )
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -56,30 +61,26 @@ class Restaurant(models.Model):
 
 class FoodItem(models.Model):
     VEGETARIAN_CHOICES = [
-        ('veg', 'Vegetarian'),
-        ('non-veg', 'Non-Vegetarian'),
+        ("veg", "Vegetarian"),
+        ("non-veg", "Non-Vegetarian"),
     ]
 
     restaurant = models.ForeignKey(
-        Restaurant,
-        on_delete=models.CASCADE,
-        related_name='food_items'
+        Restaurant, on_delete=models.CASCADE, related_name="food_items"
     )
     image = models.ImageField(upload_to="food_items/images/", blank=True, null=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     food_type = models.CharField(
-        max_length=10,
-        choices=VEGETARIAN_CHOICES,
-        default='non-veg'
+        max_length=10, choices=VEGETARIAN_CHOICES, default="non-veg"
     )
     rating = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
-    categories = models.ManyToManyField(Category, related_name='food_items')
+    categories = models.ManyToManyField(Category, related_name="food_items")
     is_available = models.BooleanField(default=False)
 
     class Meta:
-        db_table = 'restaurants_food_items'
+        db_table = "restaurants_food_items"
 
     def __str__(self):
         return self.name
