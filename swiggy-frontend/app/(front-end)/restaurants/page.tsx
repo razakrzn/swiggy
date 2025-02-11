@@ -4,7 +4,7 @@ import BestCities from "@/components/frontend/BestCities";
 import Footer from "@/components/frontend/Footer";
 import Header from "@/components/frontend/Header";
 import OnlineDelivery from "@/components/frontend/OnlineDelivery";
-import RestauratChain from "@/components/frontend/RestauratChain";
+import RestaurantChain from "@/components/frontend/RestaurantChain";
 import RestaurantsLayout from "./layout";
 import { useEffect, useState } from "react";
 import LocationSelector from "@/components/frontend/Location";
@@ -50,7 +50,7 @@ export default function Restaurant() {
           onClose={() => setShowLocationSelector(false)}
         />
       )}
-      <RestauratChain selectedLocation={selectedLocation} />
+      <RestaurantChain selectedLocation={selectedLocation} />
       <OnlineDelivery selectedLocation={selectedLocation} />
       <BestCities />
       <Footer />

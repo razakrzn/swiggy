@@ -2,13 +2,14 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBowlFood, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useCustomerAuth } from "@/contexts/CustomerAuthContext";
 import AuthModal from "../auth/AuthModal";
 import { useCart } from "@/contexts/CartContext";
 import { usePathname } from "next/navigation";
+import classNames from "classnames";
 
 interface HeaderProps {
   onShowLocationSelector: () => void;
@@ -21,6 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
 
   const pathname = usePathname();
   const isActive = (paths: string[]) => paths.includes(pathname);
+
   return (
     <>
       <header className="h-[80px] shadow-custom pl-[20px] pr-[20px]">
@@ -31,10 +33,12 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
                 href="/restaurants"
                 className=" w-[48px] overflow-hidden inline-block rounded-[15px]"
               >
-                <img
+                <Image
                   src="/images/logo-2.png"
-                  alt="Logo"
-                  className="w-full h-full object-cover"
+                  alt="Swiggy Logo"
+                  width={48}
+                  height={48}
+                  className="object-cover"
                 />
               </Link>
               <div
@@ -42,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
                 onClick={onShowLocationSelector}
                 className="locationContainer group text-[16px] pr-[10px] relative hover:text-logoColor"
               >
-                <span className="relative after:content-[''] after:absolute after:h-[2px] after:w-full after:left-0 after:bottom-[-5px] after:bg-customGray group-hover:after:bg-logoColor  ">
+                <span className="relative after:content-[''] after:absolute after:h-[2px] after:w-full after:left-0 after:bottom-[-5px] after:bg-customGray group-hover:after:bg-logoColor">
                   <span className="text-[13px] font-bold">Other</span>
                 </span>
                 <span className="ml-1 text-[13px] text-lightGray font-normal pl-1 group-hover:text-opacity-70">
@@ -59,10 +63,11 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
           <nav className="flex justify-between gap-[50px] items-center h-full">
             <Link href="/" className="hover:text-logoColor flex">
               <span className="inline-block w-[18px] mr-[10px]">
-                <img
-                  className="block w-full"
+                <Image
                   src="/images/corporate.svg"
-                  alt="corporate icon"
+                  alt="Corporate icon"
+                  width={18}
+                  height={18}
                 />
               </span>
               <span className="text-[14px] font-semibold">
@@ -71,30 +76,33 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
             </Link>
             <Link href="/" className="hover:text-logoColor flex items-center">
               <span className="inline-block w-[17px] mr-[10px]">
-                <img
-                  className="block w-full"
+                <Image
                   src="/images/search.png"
-                  alt="corporate icon"
+                  alt="Search icon"
+                  width={17}
+                  height={17}
                 />
               </span>
               <span className="text-[14px] font-semibold">Search</span>
             </Link>
             <Link href="/" className="hover:text-logoColor flex items-center">
               <span className="inline-block w-[19px] mr-[10px]">
-                <img
-                  className="block w-full"
+                <Image
                   src="/images/offer.svg"
-                  alt="corporate icon"
+                  alt="Offer icon"
+                  width={19}
+                  height={19}
                 />
               </span>
               <span className="text-[14px] font-semibold">Offer</span>
             </Link>
             <Link href="/" className="hover:text-logoColor flex items-center">
               <span className="inline-block w-[18px] mr-[10px]">
-                <img
-                  className="block w-full"
+                <Image
                   src="/images/help.svg"
-                  alt="corporate icon"
+                  alt="Help icon"
+                  width={18}
+                  height={18}
                 />
               </span>
               <span className="text-[14px] font-semibold">Help</span>
@@ -102,15 +110,20 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
             {user ? (
               <Link
                 href="/profile"
-                className={`text-[14px] font-semibold hover:text-logoColor flex items-center ${
-                  isActive(["/profile/"]) ? "text-[#161823]" : "text-logoColor"
-                }`}
+                className={classNames(
+                  "text-[14px] font-semibold hover:text-logoColor flex items-center",
+                  {
+                    "text-[#161823]": isActive(["/profile/"]),
+                    "text-logoColor": !isActive(["/profile/"]),
+                  }
+                )}
               >
                 <span className="inline-block w-[19px] mr-[10px]">
-                  <img
-                    className="block w-full"
+                  <Image
                     src="/images/signIn.svg"
-                    alt="user icon"
+                    alt="User icon"
+                    width={19}
+                    height={19}
                   />
                 </span>
                 <span className="text-[14px] font-semibold capitalize">
@@ -123,10 +136,11 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
                 className="hover:text-logoColor flex items-center"
               >
                 <span className="inline-block w-[19px] mr-[10px]">
-                  <img
-                    className="block w-full"
+                  <Image
                     src="/images/signIn.svg"
-                    alt="sign-in icon"
+                    alt="Sign-in icon"
+                    width={19}
+                    height={19}
                   />
                 </span>
                 <span className="text-[14px] font-semibold">Sign In</span>
@@ -134,26 +148,26 @@ const Header: React.FC<HeaderProps> = ({ onShowLocationSelector }) => {
             )}
             <Link
               href="/checkout"
-              className={`hover:text-logoColor flex items-center ${
-                totalItems > 0 ? "text-logoColor" : "text-black"
-              }`}
+              className={classNames("hover:text-logoColor flex items-center", {
+                "text-logoColor": totalItems > 0,
+                "text-black": totalItems === 0,
+              })}
             >
               <span className="relative inline-block w-[19px] mr-[10px]">
                 <span className="absolute pb-[2px] top-0 text-center w-[20px] h-[11px] bg-white inline-block text-[12px] font-semibold">
                   <span
-                    className={`absolute left-0 top-[-3px] text-center w-full inline-block text-[12px] font-semibold ${
-                      totalItems > 0 ? "text-logoColor" : "text-black"
-                    }`}
+                    className={classNames(
+                      "absolute left-0 top-[-3px] text-center w-full inline-block text-[12px] font-semibold",
+                      {
+                        "text-logoColor": totalItems > 0,
+                        "text-black": totalItems === 0,
+                      }
+                    )}
                   >
                     {totalItems > 0 ? totalItems : 0}
                   </span>
                 </span>
                 <FontAwesomeIcon icon={faBowlFood} size="lg" />
-                {/* <img
-                  className="block w-full"
-                  src="/images/cart.svg"
-                  alt="corporate icon"
-                /> */}
               </span>
               <span className="text-[14px] font-semibold text-customGray">
                 Cart

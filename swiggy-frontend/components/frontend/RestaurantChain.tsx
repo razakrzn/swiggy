@@ -1,10 +1,11 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  faArrowLeft,
+  faArrowRight,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useScroll } from "@/app/hooks/useScroll";
 import { useEffect, useState } from "react";
@@ -24,11 +25,11 @@ interface Restaurant {
   closing_time: string;
 }
 
-interface RestauratChainProps {
+interface RestaurantChainProps {
   selectedLocation: string;
 }
 
-const RestauratChain: React.FC<RestauratChainProps> = ({
+const RestaurantChain: React.FC<RestaurantChainProps> = ({
   selectedLocation,
 }) => {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
@@ -274,4 +275,4 @@ const RestauratChain: React.FC<RestauratChainProps> = ({
   );
 };
 
-export default RestauratChain;
+export default RestaurantChain;
