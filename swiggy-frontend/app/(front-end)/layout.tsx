@@ -2,6 +2,11 @@ import { ReactNode } from "react";
 import { CartProvider } from "@/contexts/CartContext";
 import { Metadata } from "next";
 import "../../app/styles/globals.css";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Order Food Online from India's Best Food Delivery Service | Swiggy",
@@ -18,7 +23,7 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body>
+      <body className={montserrat.className}>
         <CartProvider>{children}</CartProvider>
       </body>
     </html>

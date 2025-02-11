@@ -4,6 +4,12 @@ import { OwnerAuthProvider } from "@/contexts/OwnerAuthContext";
 import { Metadata } from "next";
 import "../../styles/globals.css";
 
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Partner with | Swiggy",
   icons: {
@@ -18,7 +24,7 @@ export default function DashboardLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={montserrat.className}>
         <OwnerAuthProvider>
           <HeaderDashboard />
           <div className="flex">
