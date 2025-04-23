@@ -38,35 +38,33 @@ interface CartProviderProps {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cartItems, setCartItems] = useState<FoodItem[]>([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load cart items from localStorage when the app starts
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedCart = localStorage.getItem("cartItems");
-      if (savedCart) {
-        try {
-          const parsedCart = JSON.parse(savedCart);
-          // Optionally, you can validate the structure of parsedCart here
-          setCartItems(parsedCart);
-        } catch (e) {
-          console.error("Error parsing cart items from localStorage", e);
-          setCartItems([]); // Fallback to an empty cart
-        }
+    const savedCart = localStorage.getItem("cartItems");
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        setCartItems(parsedCart);
+      } catch (e) {
+        console.error("Error parsing cart items from localStorage", e);
+        setCartItems([]);
       }
     }
+    setIsInitialized(true);
   }, []);
 
   // Save cart items to localStorage when they change
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (isInitialized) {
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
-  }, [cartItems]);
+  }, [cartItems, isInitialized]);
 
   // Add item to cart or increase quantity if the item already exists
   const addToCart = (item: FoodItem) => {
     setCartItems((prevItems) => {
-      // Ensure that items from different restaurants are handled separately
       const existingItem = prevItems.find(
         (cartItem) =>
           cartItem.id === item.id && cartItem.restaurant === item.restaurant

@@ -2,6 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #fc8019;
+  --secondary-color: #282c3f;
+  --accent-color: #60b246;
+  --text-primary: #3d4152;
+  --text-secondary: #686b78;
+  --background-light: #f8f8f8;
+  --border-color: #e9e9eb;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-background-light text-text-primary antialiased;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+
+  .btn-primary {
+    @apply bg-primary-color text-white px-4 py-2 rounded-lg font-medium 
+           hover:bg-opacity-90 transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-primary-color focus:ring-opacity-50;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary border border-primary px-4 py-2 rounded-lg font-medium 
+           hover:bg-primary hover:text-white transition-all duration-200 
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-border-color rounded-lg 
+           focus:outline-none focus:ring-2 focus:ring-primary-color focus:ring-opacity-50 
+           transition-all duration-200;
+  }
+}
+
 body {
   /* font-family: Montserrat; */
 }
@@ -240,4 +291,8 @@ body {
 
 .select-container__multi-value__remove:hover {
   color: #ffffff;
+}
+
+.text-text-primary {
+  /* Existing code */
 }

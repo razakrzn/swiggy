@@ -5,47 +5,70 @@ export const useScroll = (scrollStep: number = 300) => {
   const [isLeftActive, setIsLeftActive] = useState(false);
   const [isRightActive, setIsRightActive] = useState(true);
 
-  const checkScrollPosition = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-      setIsLeftActive(scrollLeft > 0);
-      setIsRightActive(scrollLeft < scrollWidth - clientWidth);
-    }
+  const updateScrollState = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const isAtStart = scrollLeft === 0;
+    const isAtEnd = Math.abs(scrollWidth - clientWidth - scrollLeft) < 1;
+
+    setIsLeftActive(!isAtStart);
+    setIsRightActive(!isAtEnd);
   };
 
   const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: scrollStep,
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+
+    if (currentScroll < maxScroll) {
+      const targetScroll = Math.min(currentScroll + scrollStep, maxScroll);
+      container.scrollTo({
+        left: targetScroll,
         behavior: "smooth",
       });
     }
   };
 
   const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({
-        left: -scrollStep,
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const currentScroll = container.scrollLeft;
+    if (currentScroll > 0) {
+      const targetScroll = Math.max(currentScroll - scrollStep, 0);
+      container.scrollTo({
+        left: targetScroll,
         behavior: "smooth",
       });
     }
   };
 
   useEffect(() => {
-    // Check initial scroll position
-    checkScrollPosition();
-
     const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener("scroll", checkScrollPosition);
-    }
+    if (!container) return;
 
-    // Ensure we clean up the event listener on unmount
+    // Initial check
+    updateScrollState();
+
+    // Add scroll event listener with debounce
+    let timeoutId: NodeJS.Timeout;
+    const handleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateScrollState, 100);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+
+    // Cleanup
     return () => {
-      if (container) {
-        container.removeEventListener("scroll", checkScrollPosition);
-      }
+      clearTimeout(timeoutId);
+      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 

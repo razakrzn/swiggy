@@ -1,277 +1,239 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-
 import Link from "next/link";
+import Image from "next/image";
 
 const Footer = () => {
+  const footerLinks = {
+    company: [
+      { label: "About Us", href: "/" },
+      { label: "Swiggy Corporate", href: "/" },
+      { label: "Careers", href: "/" },
+      { label: "Team", href: "/" },
+      { label: "Swiggy One", href: "/" },
+      { label: "Swiggy Instamart", href: "/" },
+      { label: "Swiggy Dineout", href: "/" },
+      { label: "Swiggy Genie", href: "/" },
+    ],
+    contact: [
+      { label: "Help & Support", href: "/" },
+      { label: "Partner with us", href: "/partner-login", target: "_blank" },
+      { label: "Ride with us", href: "/" },
+    ],
+    legal: [
+      { label: "Terms & Conditions", href: "/" },
+      { label: "Cookie Policy", href: "/" },
+      { label: "Privacy Policy", href: "/" },
+      { label: "Investor Relations", href: "/" },
+    ],
+    life: [
+      { label: "Explore with Swiggy", href: "/" },
+      { label: "Swiggy News", href: "/" },
+      { label: "Snackables", href: "/" },
+    ],
+    cities: [
+      { label: "Bangalore", href: "/" },
+      { label: "Gurgaon", href: "/" },
+      { label: "Hyderabad", href: "/" },
+      { label: "Delhi", href: "/" },
+      { label: "Mumbai", href: "/" },
+      { label: "Pune", href: "/" },
+    ],
+    social: [
+      { icon: "/images/icon-linkedin.png", href: "/", alt: "LinkedIn" },
+      { icon: "/images/icon-instagram.png", href: "/", alt: "Instagram" },
+      { icon: "/images/icon-facebook.png", href: "/", alt: "Facebook" },
+    ],
+  };
+
   return (
-    <>
-      <div className="bg-backgroudGray">
-        <div className="wrapper !w-[75%]">
-          <div className="pt-8 pb-[48px] border-t border-black flex justify-between">
-            <div className="">
-              <h3 className="w-[95%] text-2xl font-[800] opacity-[0.7] tracking-[-0.6px]">
-                For better experience,download the Swiggy app now
-              </h3>
-            </div>
-            <div className="flex">
-              <a
-                className="inline-block mx-2"
-                href="https://play.google.com/store/apps/details?id=in.swiggy.android&pcampaignid=web_share"
-                target="blank"
-              >
-                <img
-                  className="h-16 max-w-[208px]"
-                  src="/images/play_store.png"
-                  alt="play_store"
-                />
-              </a>
-              <a
-                className="inline-block mx-2"
-                href="https://apps.apple.com/in/app/swiggy-food-instamart-dineout/id989540920"
-                target="blank"
-              >
-                <img
-                  className="h-[64px] max-w-[208px]"
-                  src="/images/app_store.png"
-                  alt=""
-                />
-              </a>
-            </div>
+    <footer className="bg-background-light">
+      {/* App Download Section */}
+      <div className="container-custom py-8 border-t border-border-color">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <h3 className="text-2xl font-bold text-text-primary opacity-80 tracking-tight max-w-lg">
+            For better experience, download the Swiggy app now
+          </h3>
+          <div className="flex gap-4">
+            <a
+              href="https://play.google.com/store/apps/details?id=in.swiggy.android&pcampaignid=web_share"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform hover:scale-105"
+            >
+              <Image
+                src="/images/play_store.png"
+                alt="Download from Play Store"
+                width={160}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
+            </a>
+            <a
+              href="https://apps.apple.com/in/app/swiggy-food-instamart-dineout/id989540920"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform hover:scale-105"
+            >
+              <Image
+                src="/images/app_store.png"
+                alt="Download from App Store"
+                width={160}
+                height={48}
+                className="h-12 w-auto object-contain"
+              />
+            </a>
           </div>
         </div>
-        <div>
-          <div className="grid-container">
-            <div className="item1 margin-top w-60">
-              <div>
-                <span className="w-[160px] inline-block">
-                  <img src="/images/swiggy-logo-01.svg" alt="" />
-                </span>
-              </div>
-              <div className="opacity-[.5]">© 2024 Swiggy Limited</div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="container-custom py-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {/* Logo and Copyright */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
+            <div className="mb-4">
+              <Image
+                src="/images/swiggy-logo-01.svg"
+                alt="Swiggy"
+                width={160}
+                height={40}
+                className="w-auto h-auto"
+                priority
+              />
             </div>
-            <div className="item2">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Company</div>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">About Us</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Swiggy Corporate</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Careers</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Team</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style"> Swiggy One</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Swiggy Instamart</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Swiggy Dineout</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Swiggy Genie</div>
-                  </Link>
-                </li>
-              </ul>
+            <div className="text-sm text-text-secondary">
+              © 2024 Swiggy Limited
             </div>
-            <div className="item3">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Contact us</div>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Help & Support</div>
-                  </Link>
-                </li>
-                <li>
+          </div>
+
+          {/* Company Links */}
+          <div>
+            <h4 className="text-lg font-semibold text-text-primary mb-4">
+              Company
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks.company.map((link) => (
+                <li key={link.label}>
                   <Link
-                    href="/partner-login
-                    "
-                    target="blank"
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
                   >
-                    <div className="font-style">Partner with us</div>
+                    {link.label}
                   </Link>
                 </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Ride with us</div>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Links */}
+          <div>
+            <h4 className="text-lg font-semibold text-text-primary mb-4">
+              Contact us
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks.contact.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    target={link.target}
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
-              </ul>
-            </div>
-            <div className="item4">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Legal</div>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Terms & Conditions</div>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div>
+            <h4 className="text-lg font-semibold text-text-primary mb-4">
+              Legal
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks.legal.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Cookie Policy</div>
+              ))}
+            </ul>
+          </div>
+
+          {/* Life at Swiggy */}
+          <div>
+            <h4 className="text-lg font-semibold text-text-primary mb-4">
+              Life at Swiggy
+            </h4>
+            <ul className="space-y-2">
+              {footerLinks.life.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Privacy Policy</div>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cities and Social */}
+          <div>
+            <h4 className="text-lg font-semibold text-text-primary mb-4">
+              Available in:
+            </h4>
+            <ul className="space-y-2 mb-6">
+              {footerLinks.cities.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-text-secondary hover:text-primary transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Investor Relations</div>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="item5">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Life at Swiggy</div>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Explore with Swiggy</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Swiggy News</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Snackables</div>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="item6">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Available in:</div>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Bangalore</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Gurgaon</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Hyderabad</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Delhi</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Mumbai</div>
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/">
-                    <div className="font-style">Pune</div>
-                  </Link>
-                </li>
-                <li>
-                  <button className="visible border border-[rgba(2,6,12,0.15)] bg-transparent shadow-none h-8 cursor-pointer px-2 py-1 w-full max-w-[120px] text-left rounded-lg">
-                    <div className="flex">
-                      <div className="font-[400] text-[13px] leading-[18px] tracking-[-0.3px] text-[rgba(2,6,12,0.7)]">
-                        679 cities
-                      </div>
-                      <div className="mt-[1px] mr-[2px] ml-auto flex">
-                        <FontAwesomeIcon
-                          icon={faChevronDown}
-                          className="text-[rgba(2,6,12,0.7)] text-[11px]"
-                        />
-                      </div>
-                    </div>
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div className="item7">
-              <ul>
-                <li className="margin-top">
-                  <div className="heading">Social Links</div>
-                </li>
-                <div className="flex gap-[16px] w-full">
-                  <a className="w-[16px] h-[18px]" href="/">
-                    <img
-                      className="h-full w-full object-contain"
-                      src="/images/icon-linkedin.png"
-                      alt=""
+              ))}
+            </ul>
+            <button className="btn-secondary text-sm w-full max-w-[120px]">
+              <div className="flex items-center justify-between">
+                <span>679 cities</span>
+                <FontAwesomeIcon icon={faChevronDown} size="xs" />
+              </div>
+            </button>
+
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold text-text-primary mb-4">
+                Social Links
+              </h4>
+              <div className="flex gap-4">
+                {footerLinks.social.map((link) => (
+                  <a
+                    key={link.alt}
+                    href={link.href}
+                    className="text-text-secondary hover:text-primary transition-colors"
+                  >
+                    <Image
+                      src={link.icon}
+                      alt={link.alt}
+                      width={16}
+                      height={16}
+                      className="w-4 h-4"
                     />
                   </a>
-                  <a className="w-[16px] h-[18px]" href="/">
-                    <img
-                      className="h-full w-full object-contain"
-                      src="/images/icon-instagram.png"
-                      alt=""
-                    />
-                  </a>
-                  <a className="w-[16px] h-[18px]" href="/">
-                    <img
-                      className="h-full w-full object-contain"
-                      src="/images/icon-facebook.png"
-                      alt=""
-                    />
-                  </a>
-                  <a className="w-[16px] h-[18px]" href="/">
-                    <img
-                      className="h-full w-full object-contain"
-                      src="/images/icon-pinterest.png"
-                      alt=""
-                    />
-                  </a>
-                  <a className="w-[16px] h-[18px]" href="/">
-                    <img
-                      className="h-full w-full object-contain"
-                      src="/images/icon-twitter.png"
-                      alt=""
-                    />
-                  </a>
-                </div>
-              </ul>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </footer>
   );
 };
 

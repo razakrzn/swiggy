@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { useScroll } from "@/app/hooks/useScroll";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Restaurant {
   id: number;
@@ -36,7 +37,11 @@ const RestaurantChain: React.FC<RestaurantChainProps> = ({
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>(
     []
   );
-  const currentTime = new Date();
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setCurrentTime(new Date());
+  }, []);
 
   const {
     scrollContainerRef,
@@ -47,18 +52,15 @@ const RestaurantChain: React.FC<RestaurantChainProps> = ({
   } = useScroll();
 
   const isWorkingDay = (working_days: string[]): boolean => {
-    if (!Array.isArray(working_days)) {
+    if (!Array.isArray(working_days) || !currentTime) {
       return false;
     }
 
-    const currentDay = new Date()
+    const currentDay = currentTime
       .toLocaleString("en-US", { weekday: "long" })
       .toLowerCase();
 
-    const result = working_days
-      .map((day) => day.toLowerCase())
-      .includes(currentDay);
-    return result;
+    return working_days.map((day) => day.toLowerCase()).includes(currentDay);
   };
 
   const getStatus = (
@@ -66,7 +68,7 @@ const RestaurantChain: React.FC<RestaurantChainProps> = ({
     openingTime: string,
     closingTime: string
   ) => {
-    if (!isWorkingDay(working_days)) {
+    if (!currentTime || !isWorkingDay(working_days)) {
       return "Closed";
     }
 
@@ -98,8 +100,8 @@ const RestaurantChain: React.FC<RestaurantChainProps> = ({
         const restaurantData: Restaurant[] = data.data.map(
           (restaurant: { location: string; working_days: any }) => ({
             ...restaurant,
-            location: restaurant.location || "", // Ensure 'location' exists
-            working_days: restaurant.working_days || [], // Ensure 'working_days' exists
+            location: restaurant.location || "",
+            working_days: restaurant.working_days || [],
           })
         );
 
@@ -113,165 +115,143 @@ const RestaurantChain: React.FC<RestaurantChainProps> = ({
   }, []);
 
   useEffect(() => {
-    // Try to get the location from localStorage first
     const storedLocation = localStorage.getItem("customerLocation");
     const locationToUse = storedLocation
       ? JSON.parse(storedLocation)
       : selectedLocation;
 
     if (locationToUse) {
-      // Filter restaurants based on the location (either from state or localStorage)
       const filtered = restaurants.filter(
         (restaurant) => restaurant.location === locationToUse
       );
-
-      setFilteredRestaurants(filtered); // Assuming you're updating the filtered list here
+      setFilteredRestaurants(filtered);
     } else {
-      // If no location is selected, show all restaurants
       setRestaurants(restaurants);
     }
   }, [selectedLocation, restaurants]);
 
   return (
-    <>
-      <div className="wrapper !w-[75%]">
-        {filteredRestaurants.length > 0 ? (
-          <div>
-            <div className="relative">
-              <div className="absolute right-[0px] mt-[12px]">
-                <button
-                  className="mr-[12px]"
-                  onClick={scrollLeft}
-                  disabled={!isLeftActive}
-                  style={{
-                    opacity: isLeftActive ? 1 : 0.5,
-                  }}
-                >
-                  <div className="flex items-center rounded-full h-8 py-2 px-2 bg-[rgba(2,6,12,0.15)]">
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                  </div>
-                </button>
-                <button
-                  className=""
-                  onClick={scrollRight}
-                  disabled={!isRightActive}
-                  style={{
-                    opacity: isRightActive ? 1 : 0.5,
-                  }}
-                >
-                  <div className="flex items-center rounded-full h-8 py-2 px-2 bg-[rgba(2,6,12,0.15)]">
-                    <FontAwesomeIcon icon={faArrowRight} />
-                  </div>
-                </button>
-              </div>
+    <div className="container-custom py-8 mt-[80px]">
+      {filteredRestaurants.length > 0 && (
+        <div className="relative">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-text-primary">
+              Top restaurant chains in {filteredRestaurants[0].location}
+            </h2>
+            <div className="flex gap-3">
+              <button
+                onClick={scrollLeft}
+                disabled={!isLeftActive}
+                className={`p-2 rounded-full bg-background-light transition-all duration-200 ${
+                  !isLeftActive
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-background-light/80 hover:shadow-md active:scale-95"
+                }`}
+                aria-label="Scroll left"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowLeft}
+                  className="text-text-primary"
+                />
+              </button>
+              <button
+                onClick={scrollRight}
+                disabled={!isRightActive}
+                className={`p-2 rounded-full bg-background-light transition-all duration-200 ${
+                  !isRightActive
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-background-light/80 hover:shadow-md active:scale-95"
+                }`}
+                aria-label="Scroll right"
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRight}
+                  className="text-text-primary"
+                />
+              </button>
             </div>
-            <div className="p-[16px]">
-              <div>
-                {filteredRestaurants.length > 0 && (
-                  <h2 className="font-bold text-[22px]">
-                    Top restaurant chains in {filteredRestaurants[0].location}
-                  </h2>
-                )}
-              </div>
-            </div>
-            <div
-              className="overflow-scroll mb-[16px] custom-scroll"
-              ref={scrollContainerRef}
-            >
-              <div className="flex">
-                {filteredRestaurants.map((restaurant) => (
-                  <div
-                    key={restaurant.id}
-                    className="first:pl-[16px] pr-[32px] last:pr-[16px]"
-                  >
-                    <div>
-                      <Link href={`/city/${restaurant.id}`}>
-                        <div className="image w-[273px] h-[180px]">
-                          <div className="w-full h-full relative rounded-lg overflow-hidden shadow-[0px_2px_8px_rgba(0,0,0,0.1)]">
-                            <div className="w-full h-full ">
-                              <img
-                                className="w-full h-full object-cover"
-                                src={restaurant.featured_image}
-                                alt={restaurant.name}
-                              />
-                            </div>
-                            <div className="absolute bottom-0 uppercase px-[12px]  pb-[8px] h-[81px] bg-gradient-to-b from-[rgba(27,30,36,0)] to-[#1b1e24] grid content-end text-left w-full">
-                              <div
-                                className={`font-extrabold tracking-tighter text-xl ${
-                                  getStatus(
-                                    restaurant.working_days,
-                                    restaurant.opening_time,
-                                    restaurant.closing_time
-                                  ) === "Open"
-                                    ? "text-white"
-                                    : "text-red-500 text-center"
-                                }`}
-                              >
-                                {getStatus(
-                                  restaurant.working_days,
-                                  restaurant.opening_time,
-                                  restaurant.closing_time
-                                ) === "Open"
-                                  ? restaurant.offer_text
-                                  : "Closed"}
-                              </div>
-                            </div>
+          </div>
+
+          <div
+            className="overflow-x-auto scrollbar-none pb-4 relative"
+            ref={scrollContainerRef}
+            style={{
+              scrollBehavior: "smooth",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
+            <div className="flex gap-6 min-w-max">
+              {filteredRestaurants.map((restaurant) => (
+                <div
+                  key={restaurant.id}
+                  className="flex-none w-[280px] sm:w-[320px]"
+                >
+                  <Link href={`/city/${restaurant.id}`}>
+                    <div className="card overflow-hidden group">
+                      <div className="relative aspect-[16/10]">
+                        <Image
+                          src={restaurant.featured_image}
+                          alt={restaurant.name}
+                          fill
+                          className="object-cover transition-transform group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <div
+                            className={`text-lg font-bold ${
+                              getStatus(
+                                restaurant.working_days,
+                                restaurant.opening_time,
+                                restaurant.closing_time
+                              ) === "Open"
+                                ? "text-white"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {getStatus(
+                              restaurant.working_days,
+                              restaurant.opening_time,
+                              restaurant.closing_time
+                            ) === "Open"
+                              ? restaurant.offer_text
+                              : "Closed"}
                           </div>
                         </div>
-                      </Link>
-                    </div>
-                    <div className="mt-[10px] ml-[12px]">
-                      <h2 className="font-[700] text-[16px] capitalize">
-                        {restaurant.name}
-                      </h2>
-                      <div className="flex items-center gap-[5px]">
-                        <span className="w-[20px] h-[20px] bg-[#1e933c] rounded-full p-[2px] inline-flex items-center justify-center">
-                          <FontAwesomeIcon
-                            icon={faStar}
-                            className="text-white text-[10px]"
-                          />
-                        </span>
-                        <div className="flex items-center text-[16px] gap-[5px]">
-                          <span className="font-regular">
-                            {restaurant.rating}
-                          </span>
-                          <span className="text-[16px] font-extrabold">.</span>
-                          <span className="font-medium">
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-bold text-text-primary mb-2">
+                          {restaurant.name}
+                        </h3>
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-1">
+                            <span className="w-5 h-5 bg-accent rounded-full flex items-center justify-center">
+                              <FontAwesomeIcon
+                                icon={faStar}
+                                className="text-white text-xs"
+                              />
+                            </span>
+                            <span className="font-medium">
+                              {restaurant.rating}
+                            </span>
+                          </div>
+                          <span className="text-text-secondary">•</span>
+                          <span className="text-text-secondary">
                             {restaurant.delivery_time} mins
                           </span>
                         </div>
-                      </div>
-                      <div>
-                        <div
-                          className="font-[400] text-[14px] text-[rgba(2,6,12,0.6)]"
-                          title={restaurant.categories.join(", ")}
-                        >
-                          {restaurant.categories.join(", ").slice(0, 35)}
-                        </div>
-                        <div className="font-[400] text-[14px] text-[rgba(2,6,12,0.6)]">
-                          {restaurant.outlet}
+                        <div className="text-sm text-text-secondary truncate">
+                          {restaurant.categories.join(", ")}
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  </Link>
+                </div>
+              ))}
             </div>
-            <div className="w-12 mx-auto h-1 rounded-sm relative bg-[#f0f0f5] progress-bar"></div>
-            <hr className="border-b border-customBorder my-8 mx-5" />
           </div>
-        ) : (
-          <div className="flex justify-center items-center flex-col">
-            <span className="w-52 inline-block">
-              <img src="/images/search-location.svg" alt="location search" />
-            </span>
-            <p className="text-center font-medium text-lg text-gray-500">
-              Please select your location.
-            </p>
-          </div>
-        )}
-      </div>
-    </>
+        </div>
+      )}
+    </div>
   );
 };
 
